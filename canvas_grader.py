@@ -2,6 +2,7 @@ import requests
 import sys
 import argparse
 
+# base URL of the Canvas API
 CANVAS_BASE_ENDPOINT = "https://canvas.rice.edu/api/v1/courses/"
 
 
@@ -268,4 +269,5 @@ def post_to_endpoint(endpoint, headers, payload):
     print("[POST] Status Code: ", response.status_code)
     print("[POST] Error Message: ", response.json())
 
+# run the program driver
 run()
