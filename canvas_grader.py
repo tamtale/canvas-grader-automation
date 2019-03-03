@@ -12,16 +12,17 @@ def enter_grades(netids, assignment_id, course_id, auth_token, grade):
 
     user_ids = get_user_ids_from_netids(netids, students)
 
-    param_keys = ["grade_data[" + uid + "][posted_grade]" for uid in user_ids]
+    param_keys = \
+        ["grade_data[" + str(uid) + "][posted_grade]" for uid in user_ids]
 
-    params = {k: grade for k in param_keys}
+    params = {k: str(grade) for k in param_keys}
 
     headers = {
         "Authorization": "Bearer " + auth_token
     }
 
-    endpoint = CANVAS_BASE_ENDPOINT + course_id 
-    endpoint += "/assignments/" + assignment_id
+    endpoint = CANVAS_BASE_ENDPOINT + str(course_id) 
+    endpoint += "/assignments/" + str(assignment_id)
     endpoint += "/submissions/update_grades"
 
     response = post_to_endpoint(endpoint, headers, params)
@@ -34,8 +35,8 @@ def get_user_ids_from_netids(netids, student_data):
 
     user_ids = []
 
-    students_matching_netids = \ 
-        [s for s in student_data where s["login_id"] in netids]
+    students_matching_netids = \
+        [s for s in student_data if s["login_id"] in netids]
     
     user_ids = [s["id"] for s in students_matching_netids]
 
@@ -107,8 +108,9 @@ def run():
 
     auth_token = sys.argv[1]
     netid_str = sys.argv[2]
+    grade = sys.argv[3]
     netids = set(netid_str.split(","))
-    enter_grades(netids, 98558, 20376, auth_token, 0.5)
+    enter_grades(netids, 98558, 20376, auth_token, grade)
 
 
 def get_from_endpoint(endpoint, headers=None, params=None):
