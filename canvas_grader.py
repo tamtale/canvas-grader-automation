@@ -7,7 +7,26 @@ CANVAS_BASE_ENDPOINT = "https://canvas.rice.edu/api/v1/courses/"
 def enter_grades(netids, assignment_id, course_id, auth_token, grade):
     # TODO: Add documentation for this!
 
-    pass
+    # TODO: Add error-handling for this
+    students = get_students_by_course_id(course_id, auth_token)
+
+    user_ids = get_user_ids_from_netids(netids, students)
+
+    param_keys = ["grade_data[" + uid + "][posted_grade]" for uid in user_ids]
+
+    params = {k: grade for k in param_keys}
+
+    headers = {
+        "Authorization": "Bearer " + auth_token
+    }
+
+    endpoint = CANVAS_BASE_ENDPOINT + course_id 
+    endpoint += "/assignments/" + assignment_id
+    endpoint += "/submissions/update_grades"
+
+    response = post_to_endpoint(endpoint, headers, params)
+    print(response)
+
 
 
 def get_user_ids_from_netids(netids, student_data):
@@ -87,7 +106,9 @@ def run():
     # hardcoded to correspond to the specific grading use case
 
     auth_token = sys.argv[1]
-    get_users_by_course_id(20376, auth_token)
+    netid_str = sys.argv[2]
+    netids = set(netid_str.split(","))
+    enter_grades(netids, 98558, 20376, auth_token, 0.5)
 
 
 def get_from_endpoint(endpoint, headers=None, params=None):
