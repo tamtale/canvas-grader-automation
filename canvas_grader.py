@@ -4,13 +4,26 @@ import sys
 CANVAS_BASE_ENDPOINT = "https://canvas.rice.edu/api/v1/courses/"
 
 
-def enter_grades(student_ids, assignment_id, course_id, auth_token):
+def enter_grades(netids, assignment_id, course_id, auth_token, grade):
     # TODO: Add documentation for this!
 
     pass
 
 
-def get_users_by_course_id(course_id, auth_token):
+def get_user_ids_from_netids(netids, student_data):
+    # TODO: Add documentation for this too LOL
+
+    user_ids = []
+
+    students_matching_netids = \ 
+        [s for s in student_data where s["login_id"] in netids]
+    
+    user_ids = [s["id"] for s in students_matching_netids]
+
+    return user_ids
+
+
+def get_students_by_course_id(course_id, auth_token):
     """
     Given a Canvas course ID, gets all accessible information about the users 
     in that course.
