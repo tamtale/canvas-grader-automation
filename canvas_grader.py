@@ -162,19 +162,32 @@ def run():
     # TODO: make command-line argparsing more robust - right now, it's 
     # hardcoded to correspond to the specific grading use case
 
+    # instantiate the argument parser
     ap = argparse.ArgumentParser()
+
+    # add a required OAuth token flag
     ap.add_argument("-at", "--auth-token", required=True, \
         help="OAuth token generated from your Canvas account")
+    
+    # add a required course ID flag
     ap.add_argument("-cid", "--course-id", required=True, \
         help="The course ID of the Canvas course you're trying to access")
+
+    # add a required assignment ID flag
     ap.add_argument("-aid", "--assignment-id", required=True, help=\
         "The assignment ID of the Canvas assignment you're trying to access")
+
+    # add a required netIDs flag - netIDs must be specified as a single string,
+    # no spaces, individual netIDs separated by commas only
     ap.add_argument("-n", "--net-ids", required=True, \
         help="The netIDs of the students you're trying to bulk-grade, as a " \
             + "comma-separated string of values")
+    
+    # add a required flag for the grade value to assign to the students
     ap.add_argument("-g", "--grade", required=True, \
         help="The grade you wish to assign to the specified students")
 
+    # parse the entered arguments from the command-line
     args = vars(ap.parse_args())
 
     auth_token = args["auth_token"]
@@ -182,6 +195,9 @@ def run():
     assignment_id = str(args["assignment_id"])
     netids = args["net_ids"].split(",")
     grade = str(args["grade"])
+
+    # enter the given grade for the given course assignment for the given 
+    # students
     enter_grades(netids, course_id, assignment_id, auth_token, grade)
 
 
