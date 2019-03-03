@@ -1,6 +1,7 @@
 import requests
 import sys
 import argparse
+import json
 
 # base URL of the Canvas API
 CANVAS_BASE_ENDPOINT = "https://canvas.rice.edu/api/v1/courses/"
@@ -166,36 +167,40 @@ def run():
     # instantiate the argument parser
     ap = argparse.ArgumentParser()
 
-    # add a required OAuth token flag
-    ap.add_argument("-at", "--auth-token", required=True, \
-        help="OAuth token generated from your Canvas account")
-    
-    # add a required course ID flag
-    ap.add_argument("-cid", "--course-id", required=True, \
-        help="The course ID of the Canvas course you're trying to access")
-
-    # add a required assignment ID flag
-    ap.add_argument("-aid", "--assignment-id", required=True, help=\
-        "The assignment ID of the Canvas assignment you're trying to access")
-
-    # add a required netIDs flag - netIDs must be specified as a single string,
-    # no spaces, individual netIDs separated by commas only
-    ap.add_argument("-n", "--net-ids", required=True, \
-        help="The netIDs of the students you're trying to bulk-grade, as a " \
-            + "comma-separated string of values")
-    
-    # add a required flag for the grade value to assign to the students
-    ap.add_argument("-g", "--grade", required=True, \
-        help="The grade you wish to assign to the specified students")
+    # add ability to specify a filename
+    ap.add_argument("-f", "--file", required=False, \
+        help="Optional: specify a JSON file containing config information." + \
+            " Defaults to pulling from a file called 'config.json'.")
 
     # parse the entered arguments from the command-line
     args = vars(ap.parse_args())
 
-    auth_token = args["auth_token"]
-    course_id = str(args["course_id"])
-    assignment_id = str(args["assignment_id"])
-    netids = args["net_ids"].split(",")
-    grade = str(args["grade"])
+    # default to the filename 'config.json' if no alternative is specified
+    filename = "config.json"
+    if args["file"]:
+        filename = args["file"]
+
+    # open the JSON file and load it into a native Python object
+    f = open(filename)
+    data = f.read()
+    json_data = json.loads(data)
+    
+    # extract the relevant data from the dictionary
+    netids = []
+    if "netids" in json_data:
+        netids = json_data["netids"]
+    course_id = ""
+    if "course-id" in json_data:
+        course_id = str(json_data["course-id"])
+    assignment_id = ""
+    if "assignment-id" in json_data:
+        assignment_id = str(json_data["assignment-id"])
+    auth_token = ""
+    if "auth-token" in json_data:
+        auth_token = json_data["auth-token"]
+    grade = ""
+    if "grade" in json_data:
+        grade = str(json_data["grade"])
 
     # enter the given grade for the given course assignment for the given 
     # students
@@ -216,7 +221,7 @@ def get_from_endpoint(endpoint, headers=None, params=None):
     Keyword Arguments:
         headers {dictionary} -- 
             optional header key-value pairs (default: {None})
-        params {[type]} -- 
+        params {dictionary} -- 
             optional request parameters as key-value pairs (default: {None})
     
     Returns:
