@@ -64,15 +64,30 @@ def enter_grades(netids, course_id, assignment_id, auth_token, grade):
     print("Response from endpoint: ", response)
 
 
-
 def get_user_ids_from_netids(netids, student_data):
-    # TODO: Add documentation for this too LOL
+    """
+    Given a list of netIDs and a list of data for all students in a class,
+    finds all students whose netIDs are in the given list. Extracts their 
+    Canvas user IDs from the detailed info and returns a list of those.
+    
+    Arguments:
+        netids {list} -- 
+            a list of netIDs for students you want to grade
+        student_data {list} -- 
+            list of dictionaries, where each dictionary contains detailed 
+            student data from Canvas
+    
+    Returns:
+        list -- 
+            a list of the Canvas user IDs corresponding to the inputted netIDs
+    """
 
-    user_ids = []
-
+    # filter out students whose netID is not in the inputted list
     students_matching_netids = \
         [s for s in student_data if s["login_id"] in netids]
     
+    # extract the Canvas user IDs from the detailed info of the filtered 
+    # students
     user_ids = [s["id"] for s in students_matching_netids]
 
     return user_ids
