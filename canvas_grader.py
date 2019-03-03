@@ -6,28 +6,62 @@ CANVAS_BASE_ENDPOINT = "https://canvas.rice.edu/api/v1/courses/"
 
 
 def enter_grades(netids, course_id, assignment_id, auth_token, grade):
-    # TODO: Add documentation for this!
+    """
+    Given a list of netIDs, find the given assignment for the given course
+    and assign the given grade to all the students with that netID in Canvas.
+    
+    (sample Canvas URL: https://canvas.rice.edu/courses/20376/assignments/98559)
 
-    # TODO: Add error-handling for this
+    Arguments:
+        netids {list} -- 
+            list of netIDs of students to assign the grade to
+        course_id {string} -- 
+            ID of the course on Canvas (generally a 4-5) digit integer on 
+            Canvas, i.e. '20376' in the example above
+        assignment_id {string} -- 
+            ID of the assignment on Canvas (generally a 4-5) digit integer on 
+            Canvas, i.e. '98559' in the example above
+        auth_token {string} -- 
+            OAuth token generated from your Canvas account
+        grade {string} -- 
+            string representation of the numeric grade to assign the students
+    """
+
+    # get all student data for all students enrolled in the given course
     students = get_students_by_course_id(course_id, auth_token)
 
+    if not students:
+        # if there aren't any students in the course, there's some error, 
+        # so terminate the program
+        print("[ERROR] No students enrolled in given course, terminating...")
+        return
+
+    # get the Canvas-specific user IDs for all students that are to be graded
     user_ids = get_user_ids_from_netids(netids, students)
 
+    # format each Canvas-specific user ID into the format expected by the 
+    # Canvas API: "grade_data[<user_id>][posted_grade]"
     param_keys = \
         ["grade_data[" + str(uid) + "][posted_grade]" for uid in user_ids]
 
+    # create the payload for the POST request: keys containing Canvas user IDs
+    # and the grade instructions, mapped to the grade value to be assigned
     params = {k: str(grade) for k in param_keys}
 
+    # create the necessary headers, including the authentication token
     headers = {
         "Authorization": "Bearer " + auth_token
     }
 
+    # create the endpoint to send the request to 
     endpoint = CANVAS_BASE_ENDPOINT + str(course_id) 
     endpoint += "/assignments/" + str(assignment_id)
     endpoint += "/submissions/update_grades"
 
+    # send the POST request to the endpoint with the given headers and payload
     response = post_to_endpoint(endpoint, headers, params)
-    print(response)
+    
+    print("Response from endpoint: ", response)
 
 
 
