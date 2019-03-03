@@ -122,10 +122,10 @@ def run():
 
     args = vars(ap.parse_args())
 
-    auth_token = args["auth-token"]
-    course_id = str(args["course-id"])
-    assignment_id = str(args["assignment-id"])
-    netids = args["net-ids"].split(",")
+    auth_token = args["auth_token"]
+    course_id = str(args["course_id"])
+    assignment_id = str(args["assignment_id"])
+    netids = args["net_ids"].split(",")
     grade = str(args["grade"])
     enter_grades(netids, course_id, assignment_id, auth_token, grade)
 
