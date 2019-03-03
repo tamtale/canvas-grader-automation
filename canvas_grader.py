@@ -1,10 +1,11 @@
 import requests
 import sys
+import argparse
 
 CANVAS_BASE_ENDPOINT = "https://canvas.rice.edu/api/v1/courses/"
 
 
-def enter_grades(netids, assignment_id, course_id, auth_token, grade):
+def enter_grades(netids, course_id, assignment_id, auth_token, grade):
     # TODO: Add documentation for this!
 
     # TODO: Add error-handling for this
@@ -106,11 +107,27 @@ def run():
     # TODO: make command-line argparsing more robust - right now, it's 
     # hardcoded to correspond to the specific grading use case
 
-    auth_token = sys.argv[1]
-    netid_str = sys.argv[2]
-    grade = sys.argv[3]
-    netids = set(netid_str.split(","))
-    enter_grades(netids, 98558, 20376, auth_token, grade)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-at", "--auth-token", required=True, \
+        help="OAuth token generated from your Canvas account")
+    ap.add_argument("-cid", "--course-id", required=True, \
+        help="The course ID of the Canvas course you're trying to access")
+    ap.add_argument("-aid", "--assignment-id", required=True, help=\
+        "The assignment ID of the Canvas assignment you're trying to access")
+    ap.add_argument("-n", "--net-ids", required=True, \
+        help="The netIDs of the students you're trying to bulk-grade, as a " \
+            + "comma-separated string of values")
+    ap.add_argument("-g", "--grade", required=True, \
+        help="The grade you wish to assign to the specified students")
+
+    args = vars(ap.parse_args())
+
+    auth_token = args["auth-token"]
+    course_id = str(args["course-id"])
+    assignment_id = str(args["assignment-id"])
+    netids = args["net-ids"].split(",")
+    grade = str(args["grade"])
+    enter_grades(netids, course_id, assignment_id, auth_token, grade)
 
 
 def get_from_endpoint(endpoint, headers=None, params=None):
