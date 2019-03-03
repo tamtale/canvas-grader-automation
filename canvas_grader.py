@@ -202,6 +202,28 @@ def run():
 
 
 def get_from_endpoint(endpoint, headers=None, params=None):
+    """
+    Given an endpoint, optional headers, and optional request parameters, sends 
+    a correctly formatted GET request to that endpoint with the given headers 
+    and request params. If the request is successful, returns the JSON 
+    response, otherwise, prints error messages to the console.
+    
+    Arguments:
+        endpoint {string} -- 
+            the endpoint URL to send the GET request to 
+    
+    Keyword Arguments:
+        headers {dictionary} -- 
+            optional header key-value pairs (default: {None})
+        params {[type]} -- 
+            optional request parameters as key-value pairs (default: {None})
+    
+    Returns:
+        dictionary/list -- 
+            the JSON object/array contained in the response, converted to a 
+            Python object
+    """
+
 
     response = requests.get(endpoint, headers=headers, params=params)
 
@@ -216,20 +238,23 @@ def get_from_endpoint(endpoint, headers=None, params=None):
 
 def post_to_endpoint(endpoint, headers, payload):
     """
-
     Given an endpoint, headers, and a request body, sends a correctly formatted
     POST request to that endpoint with the given headers and body. If the 
     request is successful, returns the JSON response, otherwise, prints error
     messages to the console.
     
     Arguments:
-        endpoint {[string]} -- The endpoint to send the request to
-        headers {[dictionary]} -- A dictionary containing header key-values
-        payload {[dictionary]} -- A dictionary containing body parameter key-
-            values
+        endpoint {string} -- 
+            The endpoint to send the request to
+        headers {dictionary} -- 
+            A dictionary containing header key-values
+        payload {dictionary} -- 
+            A dictionary containing body parameter key-values
     
     Returns:
-        [dictionary] -- The JSON format contained in the response
+         dictionary/list -- 
+            the JSON object/array contained in the response, converted to a 
+            Python object
     """
 
 
