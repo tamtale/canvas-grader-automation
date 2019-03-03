@@ -1,0 +1,7 @@
+{
+    "auth-token": "",
+    "course-id": 12345,
+    "assignment-id": 67890,
+    "grade": 0,
+    "netids": ["abc12", "xyz23", "pqr41"]
+} 
