@@ -1,6 +1,11 @@
 # canvas-grader-automation
 A library of functions that can be run from the command-line, allowing graders on Canvas to automate several tedious tasks. Currently built for allowing large-scale automation of data-entry style grading where the same grade (eg. attendance credit) needs to be given to multiple students at once.
 
+## Prerequisites
+```
+pip install -r requirements.txt
+```
+
 ## Current Functionality
 1. Currently, the script is capable of taking a Canvas course ID, an assignment ID, a grade, and a list of netIDs, and using the Canvas API to assign all students corresponding to those netIDs the chosen grade.
 2. To do this, the app requires an authentication token, which you can generate through Canvas by:
