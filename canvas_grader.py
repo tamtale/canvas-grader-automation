@@ -2,6 +2,7 @@ import requests
 import sys
 import argparse
 import json
+import yaml
 
 # base URL of the Canvas API
 CANVAS_BASE_ENDPOINT = "https://canvas.rice.edu/api/v1/courses/"
@@ -182,8 +183,9 @@ def run():
 
     # open the JSON file and load it into a native Python object
     f = open(filename)
-    data = f.read()
-    json_data = json.loads(data)
+    # data = f.read()
+    # json_data = json.loads(data)
+    json_data = yaml.load(f)
     
     # extract the relevant data from the dictionary
     netids = []
