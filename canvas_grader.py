@@ -183,8 +183,6 @@ def run():
 
     # open the JSON file and load it into a native Python object
     f = open(filename)
-    # data = f.read()
-    # json_data = json.loads(data)
     json_data = yaml.load(f)
     
     # extract the relevant data from the dictionary
